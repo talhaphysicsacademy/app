@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talha's Physics Academy - Sindh Board</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        },
+                        android: {
+                            dark: '#121212',
+                            card: '#1e1e1e',
+                            surface: '#2c2c2c'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        /* Custom scrollbar for mobile frame feel */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(156, 163, 175, 0.5);
+            border-radius: 9999px;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-300">
+
+    <!-- Top Header / App Bar -->
+    <header class="sticky top-0 z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-600 to-indigo-400 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
+                    <i class="fa-solid fa-atom text-xl animate-spin" style="animation-duration: 12s;"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg tracking-tight bg-gradient-to-r from-brand-600 to-indigo-500 bg-clip-text text-transparent">Talha's Physics Academy</h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Sindh Board Complete Learning Hub</p>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <!-- View Mode Switcher (Web vs Android Mockup Frame) -->
+                <button onclick="toggleViewMode()" id="viewModeBtn" class="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 text-xs font-semibold rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                    <i class="fa-solid fa-mobile-screen text-brand-500"></i>
+                    <span id="viewModeText">Phone Frame View</span>
+                </button>
+
+                <!-- Dark / Light Theme Toggle -->
+                <button onclick="toggleTheme()" class="w-10 h-10 rounded-full flex items-center justify-center bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-slate-600 dark:text-slate-300">
+                    <i id="themeIcon" class="fa-solid fa-moon"></i>
+                </button>
+
+                <!-- YouTube Channel Link -->
+                <a href="https://www.youtube.com/@TalhasPhysicsAcademy" target="_blank" rel="noopener noreferrer" class="hidden md:flex items-center space-x-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-full text-xs font-semibold shadow-md shadow-red-600/20 transition-all">
+                    <i class="fa-brands fa-youtube text-sm"></i>
+                    <span>YouTube Channel</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container which can toggle to Android Device Frame -->
+    <main id="appWrapper" class="flex-1 max-w-7xl w-full mx-auto p-2 sm:p-6 transition-all duration-500">
+        
+        <!-- Outer Shell (Becomes Mobile Phone Frame when toggled) -->
+        <div id="deviceShell" class="w-full bg-white dark:bg-slate-900 rounded-none sm:rounded-3xl shadow-none sm:shadow-2xl border-0 sm:border-8 sm:border-slate-800 dark:sm:border-slate-800 overflow-hidden flex flex-col min-h-[85vh] transition-all">
+            
+            <!-- Android Status Bar (Visible only in Phone Frame mode or always stylish) -->
+            <div id="statusBar" class="bg-slate-900 text-white px-6 py-1.5 text-xs flex justify-between items-center select-none">
+                <span id="currentTime" class="font-medium">12:00 PM</span>
+                <div class="flex items-center space-x-2 text-xs">
+                    <i class="fa-solid fa-signal"></i>
+                    <i class="fa-solid fa-wifi"></i>
+                    <i class="fa-solid fa-battery-full text-emerald-400"></i>
+                </div>
+            </div>
+
+            <!-- App Header Navigation Bar -->
+            <div class="bg-brand-600 text-white px-4 py-3 flex items-center justify-between shadow-md">
+                <div class="flex items-center space-x-3">
+                    <button id="backBtn" onclick="goHome()" class="hidden w-8 h-8 rounded-full hover:bg-white/10 flex items-center justify-center transition-colors">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <div>
+                        <h2 id="appScreenTitle" class="font-bold text-base">Explore Courses</h2>
+                        <p id="appScreenSubtitle" class="text-xs text-brand-100">Sindh Textbook Board Curricula</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button onclick="openSearchModal()" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
+                        <i class="fa-solid fa-magnifying-glass text-sm"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dynamic Content Area -->
+            <div id="mainContent" class="flex-1 overflow-y-auto bg-slate-50 dark:bg-slate-950 p-4 sm:p-6">
+                <!-- Dynamically rendered views will appear here -->
+            </div>
+
+            <!-- Android Bottom Navigation Bar -->
+            <nav class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-6 py-2.5 flex justify-around items-center select-none shadow-lg">
+                <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center text-brand-600 dark:text-brand-400 transition-colors">
+                    <i class="fa-solid fa-house text-lg"></i>
+                    <span class="text-[10px] font-semibold mt-1">Courses</span>
+                </button>
+                <button onclick="switchTab('search')" id="nav-search" class="flex flex-col items-center text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">
+                    <i class="fa-solid fa-compass text-lg"></i>
+                    <span class="text-[10px] font-medium mt-1">Explore</span>
+                </button>
+                <button onclick="switchTab('saved')" id="nav-saved" class="flex flex-col items-center text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">
+                    <i class="fa-solid fa-bookmark text-lg"></i>
+                    <span class="text-[10px] font-medium mt-1">Saved</span>
+                </button>
+                <button onclick="switchTab('about')" id="nav-about" class="flex flex-col items-center text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">
+                    <i class="fa-solid fa-circle-user text-lg"></i>
+                    <span class="text-[10px] font-medium mt-1">Sir Talha</span>
+                </button>
+            </nav>
+
+        </div>
+    </main>
+
+    <!-- Search Modal / Overlay -->
+    <div id="searchModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-start justify-center pt-20 px-4">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800 animate-in fade-in zoom-in-95 duration-200">
+            <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center space-x-3">
+                <i class="fa-solid fa-magnifying-glass text-slate-400"></i>
+                <input type="text" id="globalSearchInput" oninput="handleGlobalSearch(this.value)" placeholder="Search chapters, topics, or formulas..." class="w-full bg-transparent border-none outline-none text-slate-800 dark:text-slate-100 text-sm placeholder-slate-400">
+                <button onclick="closeSearchModal()" class="text-xs bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-2.5 py-1 rounded-lg font-medium">ESC</button>
+            </div>
+            <div id="searchResultsContainer" class="p-4 max-h-96 overflow-y-auto space-y-2 text-sm text-slate-600 dark:text-slate-300">
+                <p class="text-center text-slate-400 py-6">Type to start searching across Sindh Board Physics courses...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Credit -->
+    <footer class="py-4 text-center text-xs text-slate-500 dark:text-slate-400 border-t border-slate-200 dark:border-slate-800 mt-auto">
+        Talha's Physics Academy &copy; 2026 | Built for Sindh Board Students | Powered by YouTube @TalhasPhysicsAcademy
+    </footer>
+
+    <!-- JavaScript Data and App Logic -->
+    <script>
+        const physicsCourses = [
+            {
+                id: "class-9",
+                title: "Class 9 Physics",
+                board: "Sindh Textbook Board (STBB)",
+                desc: "Foundation course covering physical quantities, kinematics, dynamics, turning effects, and gravitation.",
+                icon: "fa-book-open",
+                color: "from-blue-600 to-indigo-600",
+                badgeColor: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
+                chapters: [
+                    {
+                        id: "c9-ch1",
+                        title: "Chapter 1: Physical Quantities and Measurement",
+                        desc: "Introduction to physics branches, SI units, scientific notation, and measuring instruments (Vernier Callipers & Screw Gauge).",
+                        topics: [
+                            {
+                                id: "c9-t1",
+                                title: "1.1 Introduction to Physics & Branches",
+                                duration: "14:20 min",
+                                videoId: "dQw4w9WgXcQ", // Placeholder for actual @TalhasPhysicsAcademy video id
+                                embedUrl: "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ",
+                                notes: "Physics is the branch of science that deals with the study of matter, energy and their mutual interaction. Major branches include Mechanics, Thermodynamics, Electromagnetism, Optics, and Atomic Physics."
+                            },
+                            {
+                                id: "c9-t2",
+                                title: "1.2 Physical Quantities & Base/Derived Units",
+                                duration: "18:45 min",
+                                videoId: "dQw4w9WgXcQ",
+                                embedUrl: "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ",
+                                notes: "Physical quantities are divided into base quantities (length, mass, time, electric current, temperature, intensity of light, amount of substance) and derived quantities."
+                            },
+                            {
+                                id: "c9-t3",
+                                title: "1.3 Vernier Callipers & Screw Gauge Numericals",
+                                duration: "25:10 min",
+                                videoId: "dQw4w9WgXcQ",
+                                embedUrl: "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ",
+                                notes: "Least count of Vernier Callipers = 0.1 mm or 0.01 cm. Zero error corrections and screw gauge pitch/least count formula calculations."
+                            }
+                        ]
+                    },
+                    {
+                        id: "c9-ch2",
+                        title: "Chapter 2: Kinematics",
+                        desc: "Rest and motion, types of motion, scalars vs vectors, distance, displacement, speed, velocity, and equations of motion.",
+                        topics: [
+                            {
+                                id: "c9-t4",
+                                title: "2.1 Rest, Motion & Types of Motion",
+                                duration: "16:15 min",
+                                videoId: "dQw4w9WgXcQ",
+                                embedUrl: "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ",
+                                notes: "Translatory (linear, random, circular), rotatory, and vibratory motion definitions with everyday examples."
+                            },
+                            {
+                                id: "c9-t5",
+                                title: "2.2 Graphical Analysis of Motion (Distance-Time Graph)",
+                                duration: "22:00 min",
+                                videoId: "dQw4w9WgXcQ",
+                                embedUrl: "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ",
+                                notes: "Slope of distance-time graph gives speed. Slope of speed-time graph gives acceleration, and area under speed-time graph gives total distance traveled."
+                            },
+                            {
+                                id: "c9-t6",
+                                title: "2.3 Derivation of Equations of Motion",
+                                duration: "28:30 min",
+                                videoId: "dQw4w9WgXcQ",
+                                embedUrl: "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ",
+                                notes: "1) v = u + at, 2) S = ut + 1/2 at^2, 3) 2aS = v^2 - u^2 derived step-by-step from velocity-time graph."
+                            }
+                        ]
+                    },
+                    {
+                        id: "c9-ch3",
+                        title: "Chapter 3: Dynamics",
+                        desc: "Force, inertia, momentum, Newton's laws of motion, friction, and tension in strings.",
+                        topics: [
+                            {
+                                id: "c9-t7",
+                                title: "3.1 Newton's Laws of Motion",
+                                duration: "24:10 min",
+                                videoId: "dQw4w9WgXcQ",
+                                embedUrl: "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ",
+                                notes: "First law (law of inertia), Second law (F = ma), and Third law (action and reaction are equal and opposite)."
+                            },
+                            {
+                                id: "c9-t8",
+                                title: "3.2 Friction & Its Advantages/Disadvantages",
+                                duration: "19:50 min",
+                                videoId: "dQw4w9WgXcQ",
+                                embedUrl: "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ",
+                                notes: "Frictional force opposes relative motion between surfaces in contact. Coefficient of friction and methods to reduce friction."
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: "class-10",
+                title: "Class 10 Physics",
+                board: "Sindh Textbook Board (STBB)",
+                desc: "Advanced mechanics and waves: Simple harmonic motion, acoustics, geometrical optics, electrostatics, and current electricity.",
+                icon: "fa-atom",
+                color: "from-emerald-600 to-teal-600",
+                badgeColor: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300",
+                chapters: [
+                    {
+                        id: "c10-ch1",
+                        title: "Chapter 10: Simple Harmonic Motion and Waves",
+                        desc: "SHM characteristics, simple pendulum, wave motion, mechanical vs electromagnetic waves, and ripple tank.",
+                        topics: [
+                            {
+                                id: "c10-t1",
+                                title: "10.1 Simple Harmonic Motion (SHM) & Mass-Spring System",
+                                duration: "21:00 min",
+                                videoId: "dQw4w9WgXcQ",
+                                embedUrl: "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ",
+                                notes: "Restoring force is directly proportional to displacement from mean position: F = -kx. Time period T = 2pv(m/k)."
+                            },
+                            {
+                                id: "c10-t2",
+                                title: "10.2 Wave Motion & Types of Waves",
+                                duration: "17:40 min",
+                                videoId: "dQw4w9WgXcQ",
+                                embedUrl: "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ",
+                                notes: "Transverse waves (crests and troughs) vs Longitudinal waves (compressions and rarefactions). Wave equation v = f?."
+                            }
+                        ]
+                    },
+                    {
+                        id: "c10-ch2",
+                        title: "Chapter 11: Sound",
+                        desc: "Production of sound, characteristics of sound (loudness, pitch, quality), ultrasound, and noise pollution.",
+                        topics: [
+                            {
+                                id: "c10-t3",
+                                title: "11.1 Characteristics of Sound (Pitch, Loudness, Quality)",
+                                duration: "19:15 min",
+                                videoId: "dQw4w9WgXcQ",
+                                embedUrl: "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ",
+                                notes: "Pitch depends on frequency. Loudness depends on amplitude and distance from source, measured in decibels (dB)."
+                            }
+                        ]
+                    },
+                    {
+                        id: "c10-ch3",
+                        title: "Chapter 12: Geometrical Optics",
+                        desc: "Reflection of light, spherical mirrors, refraction of light, Snell's law, total internal reflection, and lenses.",
+                        topics: [
+                            {
+                                id: "c10-t4",
+                                title: "12.1 Reflection of Light & Spherical Mirrors",
+                                duration: "26:30 min",
+                                videoId: "dQw4w9WgXcQ",
+                                embedUrl: "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ",
+                                notes: "Concave and convex mirrors. Mirror formula: 1/f = 1/p + 1/q and magnification formula m = q/p."
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: "class-11",
+                title: "Class 11 Physics",
+                board: "Sindh Textbook Board (XI - Inter Part 1)",
+                desc: "College physics: Vectors, equilibrium, motion in 2D, work and energy, circular motion, fluid dynamics, and thermodynamics.",
+                icon: "fa-graduation-cap",
+                color: "from-amber-600 to-orange-600",
+                badgeColor: "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300",
+                chapters: [
+                    {
+                        id: "c11-ch1",
+                        title: "Chapter 2: Vectors and Equilibrium",
+                        desc: "Rectangular coordinate systems, addition of vectors, dot product (scalar product), cross product (vector product), and torque.",
+                        topics: [
+                            {
+                                id: "c11-t1",
+                                title: "2.1 Rectangular Components of a Vector in 3D",
+                                duration: "25:00 min",
+                                videoId: "dQw4w9WgXcQ",
+                                embedUrl: "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ",
+                                notes: "Magnitude of vector A = v(Ax^2 + Ay^2 + Az^2) and direction cosines."
+                            },
+                            {
+                                id: "c11-t2",
+                                title: "2.2 Scalar Product & Vector Product",
+                                duration: "31:10 min",
+                                videoId: "dQw4w9WgXcQ",
+                                embedUrl: "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ",
+                                notes: "A • B = AB cos?. A × B = AB sin? n^. Geometrical interpretation and determinant method for cross product."
+                            }
+                        ]
+                    },
+                    {
+                        id: "c11-ch2",
+                        title: "Chapter 3: Motion and Force",
+                        desc: "Displacement, velocity, acceleration, Newton's laws in 2D, projectile motion, momentum, and impulse.",
+                        topics: [
+                            {
+                                id: "c11-t3",
+                                title: "3.1 Projectile Motion (Derivations & Max Height/Range)",
+                                duration: "35:40 min",
+                                videoId: "dQw4w9WgXcQ",
+                                embedUrl: "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ",
+                                notes: "Time of flight T = 2vosin?/g, Maximum height H = (vosin?)^2 / 2g, and Range R = (vo^2 sin2?)/g."
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: "class-12",
+                title: "Class 12 Physics",
+                board: "Sindh Textbook Board (XII - Inter Part 2)",
+                desc: "Second-year physics: Electrostatics, current electricity, electromagnetism, electromagnetic induction, alternating current, electronics, and nuclear physics.",
+                icon: "fa-bolt",
+                color: "from-purple-600 to-pink-600",
+                badgeColor: "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300",
+                chapters: [
+                    {
+                        id: "c12-ch1",
+                        title: "Chapter 12: Electrostatics",
+                        desc: "Coulomb's law, electric field intensity, electric flux, Gauss's law and its applications, electric potential, and capacitors.",
+                        topics: [
+                            {
+                                id: "c12-t1",
+                                title: "12.1 Coulomb's Law & Electric Field Intensity",
+                                duration: "29:15 min",
+                                videoId: "dQw4w9WgXcQ",
+                                embedUrl: "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ",
+                                notes: "F = (1/4pe0) * (q1 q2 / r^2). Electric field E = F/q0 = (1/4pe0) * (q/r^2)."
+                            },
+                            {
+                                id: "c12-t2",
+                                title: "12.2 Gauss's Law & Its Applications",
+                                duration: "34:20 min",
+                                videoId: "dQw4w9WgXcQ",
+                                embedUrl: "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ",
+                                notes: "Total electric flux through any closed surface is equal to 1/e0 times the total charge enclosed: F = Q/e0."
+                            }
+                        ]
+                    },
+                    {
+                        id: "c12-ch2",
+                        title: "Chapter 13: Current Electricity",
+                        desc: "Ohm's law, electric current, resistance, resistivity, Kirchhoff's laws, Wheatstone bridge, and potentiometer.",
+                        topics: [
+                            {
+                                id: "c12-t3",
+                                title: "13.1 Ohm's Law & Temperature Dependence of Resistance",
+                                duration: "24:50 min",
+                                videoId: "dQw4w9WgXcQ",
+                                embedUrl: "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ",
+                                notes: "V = IR. Resistivity ? and temperature coefficient of resistance a."
+                            },
+                            {
+                                id: "c12-t4",
+                                title: "13.2 Kirchhoff's Rules (KCL & KVL)",
+                                duration: "32:00 min",
+                                videoId: "dQw4w9WgXcQ",
+                                embedUrl: "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ",
+                                notes: "Kirchhoff's Current Law (junction rule, conservation of charge) and Kirchhoff's Voltage Law (loop rule, conservation of energy)."
+                            }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        let currentTab = 'home';
+        let currentView = 'courses'; // 'courses', 'chapters', 'topic-detail'
+        let selectedCourse = null;
+        let selectedChapter = null;
+        let selectedTopic = null;
+        let isPhoneFrame = false;
+        let savedTopics = JSON.parse(localStorage.getItem('talha_saved_topics') || '[]');
+
+        // Initialize App on Load
+        window.addEventListener('DOMContentLoaded', () => {
+            updateClock();
+            setInterval(updateClock, 1000);
+            renderCurrentView();
+            
+            // Check stored theme
+            if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                document.getElementById('themeIcon').className = 'fa-solid fa-sun';
+            }
+        });
+
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            document.getElementById('currentTime').innerText = `${hours}:${minutes} ${ampm}`;
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            // Update nav styles
+            ['home', 'search', 'saved', 'about'].forEach(t => {
+                const btn = document.getElementById(`nav-${t}`);
+                if (btn) {
+                    if (t === tab) {
+                        btn.className = "flex flex-col items-center text-brand-600 dark:text-brand-400 transition-colors";
+                        btn.querySelector('span').className = "text-[10px] font-semibold mt-1";
+                    } else {
+                        btn.className = "flex flex-col items-center text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors";
+                        btn.querySelector('span').className = "text-[10px] font-medium mt-1";
+                    }
+                }
+            });
+
+            if (tab === 'home') {
+                currentView = 'courses';
+                selectedCourse = null;
+                renderCurrentView();
+            } else if (tab === 'search') {
+                openSearchModal();
+            } else if (tab === 'saved') {
+                currentView = 'saved';
+                renderCurrentView();
+            } else if (tab === 'about') {
+                currentView = 'about';
+                renderCurrentView();
+            }
+        }
+
+        function toggleViewMode() {
+            isPhoneFrame = !isPhoneFrame;
+            const shell = document.getElementById('deviceShell');
+            const wrapper = document.getElementById('appWrapper');
+            const btnText = document.getElementById('viewModeText');
+            
+            if (isPhoneFrame) {
+                shell.classList.remove('rounded-none', 'border-0');
+                shell.classList.add('rounded-3xl', 'border-8', 'border-slate-800', 'max-w-md', 'mx-auto', 'my-4', 'shadow-2xl');
+                wrapper.classList.remove('max-w-7xl');
+                wrapper.classList.add('max-w-4xl');
+                btnText.innerText = 'Full Web View';
+            } else {
+                shell.classList.remove('rounded-3xl', 'border-8', 'border-slate-800', 'max-w-md', 'mx-auto', 'my-4', 'shadow-2xl');
+                shell.classList.add('rounded-none', 'border-0');
+                wrapper.classList.remove('max-w-4xl');
+                wrapper.classList.add('max-w-7xl');
+                btnText.innerText = 'Phone Frame View';
+            }
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                icon.className = 'fa-solid fa-moon';
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                icon.className = 'fa-solid fa-sun';
+            }
+        }
+
+        function goHome() {
+            currentView = 'courses';
+            selectedCourse = null;
+            selectedChapter = null;
+            selectedTopic = null;
+            renderCurrentView();
+        }
+
+        function goBack() {
+            if (currentView === 'topic-detail') {
+                currentView = 'chapters';
+                selectedTopic = null;
+            } else if (currentView === 'chapters') {
+                currentView = 'courses';
+                selectedCourse = null;
+            }
+            renderCurrentView();
+        }
+
+        function renderCurrentView() {
+            const container = document.getElementById('mainContent');
+            const backBtn = document.getElementById('backBtn');
+            const titleEl = document.getElementById('appScreenTitle');
+            const subtitleEl = document.getElementById('appScreenSubtitle');
+
+            if (currentView === 'courses') {
+                backBtn.classList.add('hidden');
+                titleEl.innerText = "Talha's Physics Academy";
+                subtitleEl.innerText = "Select Sindh Board Course";
+                
+                let html = `
+                    <div class="space-y-6 animate-in fade-in duration-300">
+                        <!-- Hero Banner -->
+                        <div class="bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-600 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden">
+                            <div class="absolute -right-6 -bottom-6 w-36 h-36 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+                            <div class="relative z-10">
+                                <span class="bg-white/20 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Sindh Textbook Board</span>
+                                <h3 class="text-xl sm:text-2xl font-bold mt-2">Master Physics with Sir Talha</h3>
+                                <p class="text-xs sm:text-sm text-brand-100 mt-1 max-w-md">Complete chapter-wise video lectures, comprehensive notes, and numerical solutions aligned with official Sindh Board curricula.</p>
+                                <div class="mt-4 flex flex-wrap items-center gap-3">
+                                    <a href="https://www.youtube.com/@TalhasPhysicsAcademy" target="_blank" rel="noopener noreferrer" class="bg-white text-brand-700 hover:bg-brand-50 px-4 py-2 rounded-xl text-xs font-bold shadow transition-all flex items-center space-x-2">
+                                        <i class="fa-brands fa-youtube text-red-600"></i>
+                                        <span>Visit YouTube Channel</span>
+                                    </a>
+                                    <a href="https://talhaphysicsacademy.blogspot.com" target="_blank" rel="noopener noreferrer" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-xl text-xs font-semibold backdrop-blur-sm transition-all flex items-center space-x-2">
+                                        <i class="fa-solid fa-blog"></i>
+                                        <span>Visit Official Blog</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Courses Grid -->
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <h4 class="font-bold text-sm text-slate-800 dark:text-slate-200">Available Courses (Class 9 - 12)</h4>
+                                <span class="text-xs text-slate-500">4 Courses</span>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                `;
+
+                physicsCourses.forEach(course => {
+                    html += `
+                        <div onclick="selectCourse('${course.id}')" class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 hover:shadow-lg dark:hover:border-slate-700 transition-all cursor-pointer group flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br ${course.color} flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
+                                        <i class="fa-solid ${course.icon} text-xl"></i>
+                                    </div>
+                                    <span class="text-[10px] font-bold px-2.5 py-1 rounded-full ${course.badgeColor}">${course.board}</span>
+                                </div>
+                                <h5 class="font-bold text-base text-slate-900 dark:text-slate-100 group-hover:text-brand-600 transition-colors">${course.title}</h5>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">${course.desc}</p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-semibold text-brand-600 dark:text-brand-400">
+                                <span class="flex items-center space-x-1.5">
+                                    <i class="fa-solid fa-book-bookmark"></i>
+                                    <span>${course.chapters.length} Chapters Available</span>
+                                </span>
+                                <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `</div></div></div>`;
+                container.innerHTML = html;
+
+            } else if (currentView === 'chapters') {
+                backBtn.classList.remove('hidden');
+                titleEl.innerText = selectedCourse.title;
+                subtitleEl.innerText = selectedCourse.board;
+
+                let html = `
+                    <div class="space-y-4 animate-in fade-in duration-300">
+                        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex items-center space-x-4">
+                            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br ${selectedCourse.color} flex items-center justify-center text-white shadow">
+                                <i class="fa-solid ${selectedCourse.icon} text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 dark:text-slate-100">${selectedCourse.title} Syllabus</h4>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">Select any chapter below to explore video lectures and notes.</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                `;
+
+                selectedCourse.chapters.forEach((chapter, index) => {
+                    html += `
+                        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-all">
+                            <div onclick="toggleChapterExpand('${chapter.id}')" class="p-4 flex items-center justify-between cursor-pointer bg-slate-50/50 dark:bg-slate-900/50">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 rounded-full bg-brand-100 dark:bg-brand-900/40 text-brand-600 dark:text-brand-400 flex items-center justify-center font-bold text-xs">
+                                        ${index + 1}
+                                    </div>
+                                    <div>
+                                        <h5 class="font-bold text-sm text-slate-900 dark:text-slate-100">${chapter.title}</h5>
+                                        <p class="text-xs text-slate-500 dark:text-slate-400">${chapter.topics.length} Topics • Video Lectures Included</p>
+                                    </div>
+                                </div>
+                                <i id="icon-${chapter.id}" class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+                            </div>
+                            <div id="topics-${chapter.id}" class="divide-y divide-slate-100 dark:divide-slate-800">
+                    `;
+
+                    chapter.topics.forEach((topic, tIndex) => {
+                        html += `
+                            <div onclick="selectTopic('${selectedCourse.id}', '${chapter.id}', '${topic.id}')" class="p-3.5 sm:px-6 flex items-center justify-between hover:bg-brand-50/40 dark:hover:bg-slate-800/50 transition-colors cursor-pointer group">
+                                <div class="flex items-center space-x-3 pr-4">
+                                    <div class="w-7 h-7 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 flex items-center justify-center text-xs flex-shrink-0">
+                                        <i class="fa-brands fa-youtube"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 group-hover:text-brand-600 transition-colors">${topic.title}</h6>
+                                        <span class="text-[10px] text-slate-400 flex items-center space-x-1 mt-0.5">
+                                            <i class="fa-regular fa-clock"></i>
+                                            <span>${topic.duration}</span>
+                                            <span>•</span>
+                                            <span class="text-red-500 font-medium">@TalhasPhysicsAcademy</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 group-hover:bg-brand-600 group-hover:text-white flex items-center justify-center text-slate-500 dark:text-slate-400 transition-all flex-shrink-0">
+                                    <i class="fa-solid fa-play text-xs"></i>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    html += `</div></div>`;
+                });
+
+                html += `</div></div>`;
+                container.innerHTML = html;
+
+            } else if (currentView === 'topic-detail') {
+                backBtn.classList.remove('hidden');
+                titleEl.innerText = selectedTopic.title;
+                subtitleEl.innerText = selectedChapter.title;
+
+                const isSaved = savedTopics.some(t => t.id === selectedTopic.id);
+
+                let html = `
+                    <div class="space-y-4 animate-in fade-in duration-300">
+                        <!-- Video Player Container (Embedded YouTube) -->
+                        <div class="bg-black rounded-2xl overflow-hidden shadow-2xl relative aspect-video w-full flex items-center justify-center group">
+                            <!-- Embedded YouTube Video from @TalhasPhysicsAcademy -->
+                            <iframe class="w-full h-full absolute inset-0" src="${selectedTopic.embedUrl}" title="${selectedTopic.title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        </div>
+
+                        <!-- Topic Info & Actions Header -->
+                        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div>
+                                <span class="bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">YouTube Lecture</span>
+                                <h3 class="font-bold text-base sm:text-lg text-slate-900 dark:text-slate-100 mt-1.5">${selectedTopic.title}</h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Channel: <strong class="text-red-600">@TalhasPhysicsAcademy</strong> • Duration: ${selectedTopic.duration}</p>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="toggleSaveTopic('${selectedTopic.id}')" class="px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 transition-all ${isSaved ? 'bg-amber-500 text-white shadow-md shadow-amber-500/20' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'}">
+                                    <i class="fa-${isSaved ? 'solid' : 'regular'} fa-bookmark"></i>
+                                    <span>${isSaved ? 'Saved to Bookmarks' : 'Save Topic'}</span>
+                                </button>
+                                <a href="https://www.youtube.com/@TalhasPhysicsAcademy" target="_blank" rel="noopener noreferrer" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-semibold shadow-md shadow-red-600/20 flex items-center space-x-2 transition-all">
+                                    <i class="fa-brands fa-youtube"></i>
+                                    <span>Open on YT</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Notes & Summary Tab Section -->
+                        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm">
+                            <div class="border-b border-slate-200 dark:border-slate-800 px-4 py-3 flex items-center space-x-4 bg-slate-50/50 dark:bg-slate-900/50">
+                                <button class="text-xs font-bold text-brand-600 dark:text-brand-400 pb-1 border-b-2 border-brand-600">Lecture Summary & Notes</button>
+                            </div>
+                            <div class="p-4 sm:p-6 text-sm text-slate-700 dark:text-slate-300 leading-relaxed space-y-4">
+                                <div class="p-4 rounded-xl bg-brand-50 dark:bg-brand-950/30 border border-brand-100 dark:border-brand-900/50 text-xs font-medium text-brand-800 dark:text-brand-300 flex items-start space-x-3">
+                                    <i class="fa-solid fa-circle-info text-base mt-0.5 flex-shrink-0"></i>
+                                    <div>
+                                        <strong>Sindh Textbook Board Alignment:</strong> This topic is curated strictly as per the official Sindh Board syllabus taught by Sir Talha on <a href="https://www.talhaphysicsacademy.blogspot.com" target="_blank" class="underline font-bold">talhaphysicsacademy.blogspot.com</a>.
+                                    </div>
+                                </div>
+                                <h5 class="font-bold text-slate-900 dark:text-slate-100 text-base">Key Takeaways & Formulae</h5>
+                                <p>${selectedTopic.notes}</p>
+                                <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
+                                    <span>Source: Talha's Physics Academy Official Blog</span>
+                                    <a href="https://www.talhaphysicsacademy.blogspot.com" target="_blank" class="text-brand-600 dark:text-brand-400 font-semibold hover:underline">Read full blog notes &rarr;</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML = html;
+
+            } else if (currentView === 'saved') {
+                backBtn.classList.add('hidden');
+                titleEl.innerText = "Saved Topics";
+                subtitleEl.innerText = "Your Bookmarked Physics Lectures";
+
+                let html = `<div class="space-y-4 animate-in fade-in duration-300">`;
+                
+                if (savedTopics.length === 0) {
+                    html += `
+                        <div class="text-center py-16 space-y-3">
+                            <div class="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mx-auto text-slate-400 text-2xl">
+                                <i class="fa-regular fa-bookmark"></i>
+                            </div>
+                            <h4 class="font-bold text-base text-slate-800 dark:text-slate-200">No Saved Topics Yet</h4>
+                            <p class="text-xs text-slate-500 max-w-xs mx-auto">Explore courses and click 'Save Topic' to bookmark important lectures for quick revision.</p>
+                            <button onclick="switchTab('home')" class="mt-2 px-4 py-2 bg-brand-600 text-white rounded-xl text-xs font-semibold shadow-md">Explore Courses</button>
+                        </div>
+                    `;
+                } else {
+                    html += `<div class="grid grid-cols-1 gap-3">`;
+                    savedTopics.forEach(item => {
+                        html += `
+                            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex items-center justify-between hover:border-brand-500 transition-all cursor-pointer group" onclick="loadSavedTopic('${item.courseId}', '${item.chapterId}', '${item.topicId}')">
+                                <div class="flex items-center space-x-3 pr-4">
+                                    <div class="w-10 h-10 rounded-xl bg-red-100 dark:bg-red-900/30 text-red-600 flex items-center justify-center flex-shrink-0">
+                                        <i class="fa-brands fa-youtube text-lg"></i>
+                                    </div>
+                                    <div>
+                                        <span class="text-[10px] font-bold text-brand-600 dark:text-brand-400 uppercase">${item.courseTitle}</span>
+                                        <h5 class="font-bold text-sm text-slate-900 dark:text-slate-100 group-hover:text-brand-600 transition-colors">${item.title}</h5>
+                                        <p class="text-xs text-slate-400">${item.duration} • Chapter: ${item.chapterTitle}</p>
+                                    </div>
+                                </div>
+                                <button onclick="event.stopPropagation(); removeSavedTopic('${item.id}')" class="w-8 h-8 rounded-full hover:bg-red-50 dark:hover:bg-red-950/40 text-slate-400 hover:text-red-600 flex items-center justify-center transition-colors">
+                                    <i class="fa-solid fa-trash-can text-xs"></i>
+                                </button>
+                            </div>
+                        `;
+                    });
+                    html += `</div>`;
+                }
+                html += `</div>`;
+                container.innerHTML = html;
+
+            } else if (currentView === 'about') {
+                backBtn.classList.add('hidden');
+                titleEl.innerText = "About Sir Talha";
+                subtitleEl.innerText = "Talha's Physics Academy";
+
+                container.innerHTML = `
+                    <div class="space-y-6 animate-in fade-in duration-300 max-w-2xl mx-auto">
+                        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 text-center shadow-sm relative overflow-hidden">
+                            <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-brand-600 to-indigo-400 flex items-center justify-center text-white text-3xl mx-auto shadow-xl shadow-brand-500/20 mb-4">
+                                <i class="fa-solid fa-chalkboard-user"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 dark:text-slate-100">Sir Talha</h3>
+                            <p class="text-xs font-semibold text-brand-600 dark:text-brand-400 mt-1">Founder & Lead Physics Instructor</p>
+                            <p class="text-xs text-slate-600 dark:text-slate-300 mt-4 leading-relaxed">
+                                Welcome to Talha's Physics Academy! Dedicated to simplifying physics for Sindh Textbook Board (STBB) students across Karachi, Hyderabad, Sukkur, and all of Sindh. Our mission is to provide crystal-clear conceptual understanding, mathematical numerical problem-solving, and premium video lectures for Classes 9, 10, 11, and 12.
+                            </p>
+
+                            <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
+                                <a href="https://www.youtube.com/@TalhasPhysicsAcademy" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold shadow-md shadow-red-600/20 flex items-center space-x-2 transition-all">
+                                    <i class="fa-brands fa-youtube text-sm"></i>
+                                    <span>Subscribe @TalhasPhysicsAcademy</span>
+                                </a>
+                                <a href="https://www.talhaphysicsacademy.blogspot.com" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-xl text-xs font-bold flex items-center space-x-2 transition-all">
+                                    <i class="fa-solid fa-blog text-brand-500"></i>
+                                    <span>Official Blog Notes</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4">
+                                <span class="block text-2xl font-bold text-brand-600 dark:text-brand-400">4</span>
+                                <span class="text-xs text-slate-500 mt-1 font-medium">Academic Classes</span>
+                            </div>
+                            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4">
+                                <span class="block text-2xl font-bold text-emerald-600">100+</span>
+                                <span class="text-xs text-slate-500 mt-1 font-medium">Video Lectures</span>
+                            </div>
+                            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4">
+                                <span class="block text-2xl font-bold text-purple-600">Sindh</span>
+                                <span class="text-xs text-slate-500 mt-1 font-medium">Board Aligned</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function selectCourse(courseId) {
+            selectedCourse = physicsCourses.find(c => c.id === courseId);
+            currentView = 'chapters';
+            renderCurrentView();
+        }
+
+        function selectTopic(courseId, chapterId, topicId) {
+            const course = physicsCourses.find(c => c.id === courseId);
+            const chapter = course.chapters.find(ch => ch.id === chapterId);
+            const topic = chapter.topics.find(t => t.id === topicId);
+
+            selectedCourse = course;
+            selectedChapter = chapter;
+            selectedTopic = topic;
+            currentView = 'topic-detail';
+            renderCurrentView();
+        }
+
+        function toggleChapterExpand(chapterId) {
+            const el = document.getElementById(`topics-${chapterId}`);
+            const icon = document.getElementById(`icon-${chapterId}`);
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                el.classList.add('hidden');
+                icon.style.transform = 'rotate(-90deg)';
+            }
+        }
+
+        function toggleSaveTopic(topicId) {
+            const index = savedTopics.findIndex(t => t.id === topicId);
+            if (index > -1) {
+                savedTopics.splice(index, 1);
+            } else {
+                savedTopics.push({
+                    id: selectedTopic.id,
+                    title: selectedTopic.title,
+                    duration: selectedTopic.duration,
+                    courseId: selectedCourse.id,
+                    courseTitle: selectedCourse.title,
+                    chapterId: selectedChapter.id,
+                    chapterTitle: selectedChapter.title
+                });
+            }
+            localStorage.setItem('talha_saved_topics', JSON.stringify(savedTopics));
+            renderCurrentView(); // Re-render to update button state
+        }
+
+        function removeSavedTopic(topicId) {
+            savedTopics = savedTopics.filter(t => t.id !== topicId);
+            localStorage.setItem('talha_saved_topics', JSON.stringify(savedTopics));
+            renderCurrentView();
+        }
+
+        function loadSavedTopic(courseId, chapterId, topicId) {
+            selectTopic(courseId, chapterId, topicId);
+        }
+
+        function openSearchModal() {
+            document.getElementById('searchModal').classList.remove('hidden');
+            document.getElementById('globalSearchInput').focus();
+            handleGlobalSearch('');
+        }
+
+        function closeSearchModal() {
+            document.getElementById('searchModal').classList.add('hidden');
+        }
+
+        function handleGlobalSearch(query) {
+            const container = document.getElementById('searchResultsContainer');
+            let results = [];
+
+            physicsCourses.forEach(course => {
+                course.chapters.forEach(chapter => {
+                    chapter.topics.forEach(topic => {
+                        if (topic.title.toLowerCase().includes(query.toLowerCase()) || 
+                            chapter.title.toLowerCase().includes(query.toLowerCase()) ||
+                            course.title.toLowerCase().includes(query.toLowerCase())) {
+                            results.push({
+                                course,
+                                chapter,
+                                topic
+                            });
+                        }
+                    });
+                });
+            });
+
+            if (results.length === 0) {
+                container.innerHTML = `<p class="text-center text-slate-400 py-6">No matching physics topics found for "${query}"</p>`;
+                return;
+            }
+
+            let html = `<div class="space-y-2">`;
+            results.forEach(item => {
+                html += `
+                    <div onclick="closeSearchModal(); selectTopic('${item.course.id}', '${item.chapter.id}', '${item.topic.id}')" class="p-3 bg-slate-50 dark:bg-slate-800/60 hover:bg-brand-50 dark:hover:bg-slate-800 rounded-xl cursor-pointer transition-colors flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] font-bold text-brand-600 dark:text-brand-400 uppercase">${item.course.title} • ${item.chapter.title}</span>
+                            <h6 class="font-semibold text-slate-800 dark:text-slate-200 text-xs sm:text-sm mt-0.5">${item.topic.title}</h6>
+                        </div>
+                        <i class="fa-solid fa-arrow-right text-xs text-slate-400"></i>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        // Close search modal on ESC key
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeSearchModal();
+        });
+    </script>
+</body>
+</html>
